@@ -81,6 +81,12 @@ main p {
     font-size: 1.2em;
 }
 
+.responsive-img {
+    max-width: 100%;
+    height: auto;
+    margin: 10px 0;
+}
+
 footer {
     background: #2c3e50;
     color: #ffffff;
