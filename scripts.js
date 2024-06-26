@@ -34,11 +34,17 @@ const messagesContainer = document.querySelector('.chat-messages');
 sendButton.addEventListener('click', () => {
     const message = messageInput.value.trim();
     if (message !== '') {
+        // Corrected Push function
         push(messagesRef, {
             message: message,
             timestamp: Date.now()
+        })
+        .then(() => {
+            messageInput.value = ''; // Clear input field
+        })
+        .catch((error) => {
+            console.error('Error adding message:', error);
         });
-        messageInput.value = ''; // Clear input field
     }
 });
 
