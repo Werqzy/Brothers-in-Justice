@@ -1,12 +1,10 @@
 function switchLanguage() {
     const elements = document.querySelectorAll('[data-en], [data-fr]');
     elements.forEach(element => {
-        const enText = element.getAttribute('data-en');
-        const frText = element.getAttribute('data-fr');
         if (document.documentElement.lang === 'fr') {
-            element.innerText = enText;
+            element.innerText = element.getAttribute('data-en');
         } else {
-            element.innerText = frText;
+            element.innerText = element.getAttribute('data-fr');
         }
     });
     document.documentElement.lang = document.documentElement.lang === 'fr' ? 'en' : 'fr';
