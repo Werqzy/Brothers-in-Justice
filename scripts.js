@@ -1,3 +1,4 @@
+// Language Switch Function
 function switchLanguage() {
     const elements = document.querySelectorAll('[data-en], [data-fr]');
     elements.forEach(element => {
@@ -11,31 +12,29 @@ function switchLanguage() {
     document.getElementById("lang-switch").innerText = document.documentElement.lang === 'fr' ? "Switch to English" : "Basculer en français";
 }
 
-function showLogin() {
-    document.getElementById('login-modal').style.display = 'block';
-}
+// Authentication Functions
+let loggedIn = false;
 
-function closeLogin() {
-    document.getElementById('login-modal').style.display = 'none';
-}
-
-function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    // For demo purposes, we will assume any non-empty credentials are valid
-    if (username && password) {
-        document.getElementById('login-btn').style.display = 'none';
-        document.getElementById('logout-btn').style.display = 'inline-block';
-        closeLogin();
-        alert('Logged in successfully');
+function updateAuthDisplay() {
+    const authElement = document.getElementById('auth');
+    if (loggedIn) {
+        authElement.innerHTML = '<button onclick="logout()">Logout</button>';
     } else {
-        alert('Invalid credentials');
+        authElement.innerHTML = '<button onclick="login()">Login</button>';
     }
 }
 
-function logout() {
-    document.getElementById('login-btn').style.display = 'inline-block';
-    document.getElementById('logout-btn').style.display = 'none';
-    alert('Logged out successfully');
+function login() {
+    loggedIn = true;
+    updateAuthDisplay();
 }
+
+function logout() {
+    loggedIn = false;
+    updateAuthDisplay();
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    updateAuthDisplay();
+});
