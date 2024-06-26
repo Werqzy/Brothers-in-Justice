@@ -3,61 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frères pour la Justice</title>
+    <title>Frères en Justice</title>
     <link rel="stylesheet" href="styles.css">
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "brothers-in-justice.firebaseapp.com",
+            databaseURL: "https://brothers-in-justice-default-rtdb.firebaseio.com",
+            projectId: "brothers-in-justice",
+            storageBucket: "brothers-in-justice.appspot.com",
+            messagingSenderId: "969498625744",
+            appId: "1:969498625744:web:f054be167bdcaf311ac0d5",
+            measurementId: "G-4X09QK3ZGD"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Function to login user
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                console.log("User logged in:", userCredential.user);
+                document.getElementById('auth').style.display = 'none';
+                document.getElementById('chat').style.display = 'block';
+                loadMessages();
+            } catch (error) {
+                console.error("Error logging in:", error);
+            }
+        }
+
+        // Function to signup user
+        async function signup() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                console.log("User signed up:", userCredential.user);
+            } catch (error) {
+                console.error("Error signing up:", error);
+            }
+        }
+
+        // Function to logout user
+        async function logout() {
+            try {
+                await signOut(auth);
+                console.log("User logged out");
+                document.getElementById('auth').style.display = 'block';
+                document.getElementById('chat').style.display = 'none';
+            } catch (error) {
+                console.error("Error logging out:", error);
+            }
+        }
+
+        // Function to send chat message
+        async function sendMessage() {
+            const chatInput = document.getElementById('chat-input');
+            if (chatInput.value.trim() !== '') {
+                try {
+                    await addDoc(collection(db, 'messages'), {
+                        text: chatInput.value.trim(),
+                        timestamp: new Date()
+                    });
+                    chatInput.value = '';
+                } catch (error) {
+                    console.error("Error sending message:", error);
+                }
+            }
+        }
+
+        // Function to load chat messages
+        function loadMessages() {
+            const q = query(collection(db, 'messages'), orderBy('timestamp'));
+            onSnapshot(q, (snapshot) => {
+                const chatBox = document.getElementById('chat-box');
+                chatBox.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const message = doc.data();
+                    const messageElement = document.createElement('p');
+                    messageElement.textContent = message.text;
+                    chatBox.appendChild(messageElement);
+                });
+            });
+        }
+
+        // Monitor auth state changes
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('auth').style.display = 'none';
+                document.getElementById('chat').style.display = 'block';
+                loadMessages();
+            } else {
+                document.getElementById('auth').style.display = 'block';
+                document.getElementById('chat').style.display = 'none';
+            }
+        });
+
+    </script>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <img src="logo.png" alt="Logo" class="logo">
-            <h1 data-en="Brothers in Justice" data-fr="Frères pour la Justice">Frères pour la Justice</h1>
-            <p data-en="Empowering men through advocacy, support, and education." data-fr="Renforcer les hommes par le biais de la défense des droits, du soutien et de l'éducation.">
-                Renforcer les hommes par le biais de la défense des droits, du soutien et de l'éducation.
-            </p>
-            <button id="lang-switch" onclick="switchLanguage()">Basculer en anglais</button>
-        </div>
-    </header>
-    <nav>
-        <div class="container">
-            <ul>
-                <li><a href="#about" data-en="About" data-fr="À propos">À propos</a></li>
-                <li><a href="#services" data-en="Services" data-fr="Services">Services</a></li>
-                <li><a href="#contact" data-en="Contact" data-fr="Contact">Contact</a></li>
-                <li id="auth"></li>
-            </ul>
-        </div>
-    </nav>
-    <main>
-        <div class="container">
-            <section id="about">
-                <h2 data-en="About Us" data-fr="À propos de nous">À propos de nous</h2>
-                <img src="about.jpg" alt="About Us" class="responsive-img">
-                <p data-en="Brothers in Justice is an organization dedicated to supporting men in various aspects of their lives, including mental health, legal rights, and education."
-                   data-fr="Frères pour la Justice est une organisation dédiée à soutenir les hommes dans divers aspects de leur vie, y compris la santé mentale, les droits juridiques, et l'éducation.">
-                    Frères pour la Justice est une organisation dédiée à soutenir les hommes dans divers aspects de leur vie, y compris la santé mentale, les droits juridiques, et l'éducation.
-                </p>
-            </section>
-            <section id="services">
-                <h2 data-en="Our Services" data-fr="Nos services">Nos services</h2>
-                <img src="services.jpg" alt="Our Services" class="responsive-img">
-                <p data-en="We offer mental health support, legal advice, and educational workshops to empower men in their personal and professional lives."
-                   data-fr="Nous offrons un soutien en santé mentale, des conseils juridiques et des ateliers éducatifs pour renforcer les hommes dans leur vie personnelle et professionnelle.">
-                    Nous offrons un soutien en santé mentale, des conseils juridiques et des ateliers éducatifs pour renforcer les hommes dans leur vie personnelle et professionnelle.
-                </p>
-            </section>
-            <section id="chat" style="display: none;">
-                <h2 data-en="Community Chat" data-fr="Chat de la communauté">Chat de la communauté</h2>
-                <div id="chat-box"></div>
-                <input type="text" id="chat-input" placeholder="Type your message...">
-                <button onclick="sendMessage()">Send</button>
-            </section>
-        </div>
-    </main>
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 <span data-en="Brothers in Justice" data-fr="Frères pour la Justice">Frères pour la Justice</span></p>
-        </div>
-    </footer>
-    <script src="scripts.js"></script>
+    <section id="auth">
+        <h2>Login</h2>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <button onclick="signup()">Sign Up</button>
+        <button onclick="logout()">Logout</button>
+    </section>
+    <section id="chat" style="display: none;">
+        <h2>Community Chat</h2>
+        <div id="chat-box"></div>
+        <input type="text" id="chat-input" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </section>
 </body>
 </html>
