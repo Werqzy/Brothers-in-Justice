@@ -1,23 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App</title>
-    <link rel="stylesheet" href="style.css"> 
+    <title>Frères en Justice</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "brothers-in-justice.firebaseapp.com",
+            databaseURL: "https://brothers-in-justice-default-rtdb.firebaseio.com",
+            projectId: "brothers-in-justice",
+            storageBucket: "brothers-in-justice.appspot.com",
+            messagingSenderId: "969498625744",
+            appId: "1:969498625744:web:f054be167bdcaf311ac0d5",
+            measurementId: "G-4X09QK3ZGD"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Function to login user
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                console.log("User logged in:", userCredential.user);
+                document.getElementById('auth').style.display = 'none';
+                document.getElementById('chat').style.display = 'block';
+                loadMessages();
+            } catch (error) {
+                console.error("Error logging in:", error);
+            }
+        }
+
+        // Function to signup user
+        async function signup() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                console.log("User signed up:", userCredential.user);
+            } catch (error) {
+                console.error("Error signing up:", error);
+            }
+        }
+
+        // Function to logout user
+        async function logout() {
+            try {
+                await signOut(auth);
+                console.log("User logged out");
+                document.getElementById('auth').style.display = 'block';
+                document.getElementById('chat').style.display = 'none';
+            } catch (error) {
+                console.error("Error logging out:", error);
+            }
+        }
+
+        // Function to send chat message
+        async function sendMessage() {
+            const chatInput = document.getElementById('chat-input');
+            if (chatInput.value.trim() !== '') {
+                try {
+                    await addDoc(collection(db, 'messages'), {
+                        text: chatInput.value.trim(),
+                        timestamp: new Date()
+                    });
+                    chatInput.value = '';
+                } catch (error) {
+                    console.error("Error sending message:", error);
+                }
+            }
+        }
+
+        // Function to load chat messages
+        function loadMessages() {
+            const q = query(collection(db, 'messages'), orderBy('timestamp'));
+            onSnapshot(q, (snapshot) => {
+                const chatBox = document.getElementById('chat-box');
+                chatBox.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const message = doc.data();
+                    const messageElement = document.createElement('p');
+                    messageElement.textContent = message.text;
+                    chatBox.appendChild(messageElement);
+                });
+            });
+        }
+
+        // Monitor auth state changes
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('auth').style.display = 'none';
+                document.getElementById('chat').style.display = 'block';
+                loadMessages();
+            } else {
+                document.getElementById('auth').style.display = 'block';
+                document.getElementById('chat').style.display = 'none';
+            }
+        });
+
+    </script>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <h2>Chat Room</h2>
-        </div>
-        <div class="chat-messages">
-        </div>
-        <div class="chat-input">
-            <input type="text" id="message-input" placeholder="Type your message...">
-            <button id="send-button">Send</button>
-        </div>
-    </div>
-    <script type="module" src="script.js"></script> 
+    <section id="auth">
+        <h2>Login</h2>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <button onclick="signup()">Sign Up</button>
+        <button onclick="logout()">Logout</button>
+    </section>
+    <section id="chat" style="display: none;">
+        <h2>Community Chat</h2>
+        <div id="chat-box"></div>
+        <input type="text" id="chat-input" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </section>
 </body>
 </html>
