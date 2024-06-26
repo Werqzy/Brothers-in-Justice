@@ -1,9 +1,10 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     line-height: 1.6;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+    color: #333;
 }
 
 .container {
@@ -16,15 +17,18 @@ header {
     background: #35424a;
     color: #ffffff;
     padding-top: 30px;
+    padding-bottom: 30px;
     min-height: 70px;
     border-bottom: #e8491d 3px solid;
 }
 
-header a {
-    color: #ffffff;
-    text-decoration: none;
-    text-transform: uppercase;
-    font-size: 16px;
+header h1 {
+    font-size: 2em;
+    margin: 0;
+}
+
+header p {
+    font-size: 1.2em;
 }
 
 button {
@@ -40,4 +44,55 @@ button {
 
 button:hover {
     background-color: #444;
+}
+
+nav {
+    background: #35424a;
+    color: #ffffff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+nav ul {
+    padding: 0;
+    list-style: none;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 20px;
+}
+
+nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.2em;
+}
+
+main {
+    padding: 20px 0;
+}
+
+main h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+main p {
+    font-size: 1.2em;
+}
+
+footer {
+    background: #35424a;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+footer a {
+    color: #e8491d;
+    text-decoration: none;
 }
