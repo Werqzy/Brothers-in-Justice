@@ -39,4 +39,33 @@
             document.getElementById('chat').style.display = 'none';
         }
     });
+</script><script>
+    // Function to login user
+    function login() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Successfully logged in
+                console.log("User logged in:", userCredential.user);
+            })
+            .catch((error) => {
+                console.error("Error logging in:", error);
+            });
+    }
+
+    // Function to signup user
+    function signup() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Successfully signed up
+                console.log("User signed up:", userCredential.user);
+            })
+            .catch((error) => {
+                console.error("Error signing up:", error);
+            });
+    }
 </script>
+
