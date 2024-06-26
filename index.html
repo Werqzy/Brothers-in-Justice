@@ -15,8 +15,6 @@
                 Renforcer les hommes par le biais de la défense des droits, du soutien et de l'éducation.
             </p>
             <button id="lang-switch" onclick="switchLanguage()">Basculer en anglais</button>
-            <button id="login-btn" onclick="showLogin()">Se connecter</button>
-            <button id="logout-btn" onclick="logout()" style="display:none;">Se déconnecter</button>
         </div>
     </header>
     <nav>
@@ -25,6 +23,7 @@
                 <li><a href="#about" data-en="About" data-fr="À propos">À propos</a></li>
                 <li><a href="#services" data-en="Services" data-fr="Services">Services</a></li>
                 <li><a href="#contact" data-en="Contact" data-fr="Contact">Contact</a></li>
+                <li id="auth"></li>
             </ul>
         </div>
     </nav>
@@ -46,6 +45,12 @@
                     Nous offrons un soutien en santé mentale, des conseils juridiques et des ateliers éducatifs pour renforcer les hommes dans leur vie personnelle et professionnelle.
                 </p>
             </section>
+            <section id="chat" style="display: none;">
+                <h2 data-en="Community Chat" data-fr="Chat de la communauté">Chat de la communauté</h2>
+                <div id="chat-box"></div>
+                <input type="text" id="chat-input" placeholder="Type your message...">
+                <button onclick="sendMessage()">Send</button>
+            </section>
         </div>
     </main>
     <footer>
@@ -53,22 +58,6 @@
             <p>&copy; 2024 <span data-en="Brothers in Justice" data-fr="Frères pour la Justice">Frères pour la Justice</span></p>
         </div>
     </footer>
-
-    <!-- Login Modal -->
-    <div id="login-modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close" onclick="closeLogin()">&times;</span>
-            <form id="login-form" onsubmit="event.preventDefault(); login();">
-                <h2 data-en="Login" data-fr="Connexion">Connexion</h2>
-                <label for="username" data-en="Username" data-fr="Nom d'utilisateur">Nom d'utilisateur</label>
-                <input type="text" id="username" name="username" required>
-                <label for="password" data-en="Password" data-fr="Mot de passe">Mot de passe</label>
-                <input type="password" id="password" name="password" required>
-                <button type="submit" data-en="Login" data-fr="Connexion">Connexion</button>
-            </form>
-        </div>
-    </div>
-
     <script src="scripts.js"></script>
 </body>
 </html>
