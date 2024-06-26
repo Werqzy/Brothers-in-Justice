@@ -10,4 +10,5 @@ function switchLanguage() {
         }
     });
     document.documentElement.lang = document.documentElement.lang === 'fr' ? 'en' : 'fr';
+    document.getElementById("lang-switch").innerText = document.documentElement.lang === 'fr' ? "Switch to English" : "Basculer en français";
 }
