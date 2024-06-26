@@ -98,3 +98,26 @@ footer a {
     color: #e74c3c;
     text-decoration: none;
 }
+
+#chat {
+    margin-top: 20px;
+}
+
+#chat-box {
+    background: #f1f1f1;
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 200px;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+}
+
+#chat-input {
+    width: calc(100% - 100px);
+    padding: 10px;
+    margin-right: 10px;
+}
+
+#chat input, #chat button {
+    display: inline-block;
+}
